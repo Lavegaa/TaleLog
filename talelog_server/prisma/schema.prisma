@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model difficulty_levels {
+  id      Int       @id @default(autoincrement())
+  level   String    @db.VarChar(20)
+  stories stories[]
+}
+
+model example_sentences {
+  id           Int            @id @default(autoincrement())
+  story_id     Int?
+  sequence     Int
+  content_ko   String         @db.Text
+  content_en   String         @db.Text
+  stories      stories?       @relation(fields: [story_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "example_sentences_ibfk_1")
+  keywords     keywords[]
+  user_answers user_answers[]
+
+  @@index([story_id], map: "story_id")
+}
+
+model keywords {
+  id                Int                @id @default(autoincrement())
+  sentence_id       Int?
+  word_ko           String             @db.VarChar(100)
+  word_en           String             @db.VarChar(100)
+  example_sentences example_sentences? @relation(fields: [sentence_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "keywords_ibfk_1")
+
+  @@index([sentence_id], map: "sentence_id")
+}
+
+model stories {
+  id                Int                 @id @default(autoincrement())
+  difficulty_id     Int?
+  title_ko          String              @db.VarChar(200)
+  title_en          String              @db.VarChar(200)
+  created_at        DateTime?           @default(now()) @db.Timestamp(0)
+  updated_at        DateTime?           @default(now()) @db.Timestamp(0)
+  example_sentences example_sentences[]
+  difficulty_levels difficulty_levels?  @relation(fields: [difficulty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "stories_ibfk_1")
+
+  @@index([difficulty_id], map: "difficulty_id")
+}
+
+model user_answers {
+  id                  Int                @id @default(autoincrement())
+  user_id             Int?
+  example_sentence_id Int?
+  answer              String?            @db.Text
+  is_correct          Boolean?
+  created_at          DateTime?          @default(now()) @db.Timestamp(0)
+  example_sentences   example_sentences? @relation(fields: [example_sentence_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_answers_ibfk_1")
+
+  @@index([example_sentence_id], map: "example_sentence_id")
+}
