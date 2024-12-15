@@ -1,62 +1,52 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
+# from english_teacher.types.story import Keyword, Story, Title, Level, StoryData
 
-# If you want to run a snippet of code before or after the crew starts, 
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+# Uncomment the following line to use an example of a custom tool
+# from english_teacher.tools.custom_tool import MyCustomTool
+
+# Check our tools documentations for more information on how to use them
+# from crewai_tools import SerperDevTool
 
 @CrewBase
-class StoryGenerator():
+class StoryGeneratorCrew():
 	"""StoryGenerator crew"""
 
-	# Learn more about YAML configuration files here:
-	# Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-	# Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-	agents_config = 'config/agents.yaml'
-	tasks_config = 'config/tasks.yaml'
-
-	# If you would like to add tools to your agents, you can learn more about it here:
-	# https://docs.crewai.com/concepts/agents#agent-tools
 	@agent
-	def researcher(self) -> Agent:
+	def story_creator(self) -> Agent:
 		return Agent(
-			config=self.agents_config['researcher'],
+			config=self.agents_config['story_creator'],
+			# tools=[MyCustomTool()], # Example of custom tool, loaded on the beginning of file
 			verbose=True
 		)
 
 	@agent
-	def reporting_analyst(self) -> Agent:
+	def translator(self) -> Agent:
 		return Agent(
-			config=self.agents_config['reporting_analyst'],
+			config=self.agents_config['translator'],
 			verbose=True
 		)
 
-	# To learn more about structured task outputs, 
-	# task dependencies, and task callbacks, check out the documentation:
-	# https://docs.crewai.com/concepts/tasks#overview-of-a-task
 	@task
-	def research_task(self) -> Task:
+	def story_generation_task(self) -> Task:
 		return Task(
-			config=self.tasks_config['research_task'],
+			config=self.tasks_config['story_generation_task'],
 		)
 
 	@task
-	def reporting_task(self) -> Task:
+	def translation_and_keyword_extraction_task(self) -> Task:
 		return Task(
-			config=self.tasks_config['reporting_task'],
-			output_file='report.md'
+			config=self.tasks_config['translation_and_keyword_extraction_task'],
 		)
 
 	@crew
 	def crew(self) -> Crew:
-		"""Creates the StoryGenerator crew"""
-		# To learn how to add knowledge sources to your crew, check out the documentation:
-		# https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
+		"""Creates the EnglishTeacher crew"""
 		return Crew(
 			agents=self.agents, # Automatically created by the @agent decorator
 			tasks=self.tasks, # Automatically created by the @task decorator
 			process=Process.sequential,
 			verbose=True,
+			# output_pydantic=StoryData
 			# process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
 		)
