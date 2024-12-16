@@ -15,4 +15,19 @@ export default class StoryRepository {
       },
     });
   }
+
+  async getStorySentenceAndKeywordsById(storyId: number) {
+    return await this.prisma.stories.findUnique({
+      where: {
+        id: storyId,
+      },
+      include: {
+        example_sentences: {
+          include: {
+            keywords: true,
+          },
+        },
+      },
+    });
+  }
 }

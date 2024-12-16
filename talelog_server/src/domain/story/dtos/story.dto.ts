@@ -5,8 +5,6 @@ export class StoryDto {
   title_en: string;
   created_at: Date;
   updated_at: Date;
-  example_sentences?: ExampleSentenceDto[];
-  difficulty_levels?: DifficultyLevelDto;
 }
 
 export class ExampleSentenceDto {
@@ -16,7 +14,6 @@ export class ExampleSentenceDto {
   content_ko: string;
   content_en: string;
   keywords?: KeywordDto[];
-  user_answers?: UserAnswerDto[];
 }
 
 export class KeywordDto {
@@ -52,4 +49,14 @@ export class UpdateStoryDto {
   difficulty_id?: number;
   title_ko?: string;
   title_en?: string;
+}
+
+export class StoryDetailDto {
+  id: number;
+  difficulty_id: number;
+  title_ko: string;
+  title_en: string;
+  created_at: Date;
+  updated_at: Date;
+  example_sentences: ExampleSentenceDto[];
 }
