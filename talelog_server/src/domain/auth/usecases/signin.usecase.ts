@@ -8,6 +8,10 @@ export default class SignInUc {
 
   async execute(idToken: string) {
     const jwtToken = await this.authService.authenticateWithGoogle(idToken);
-    return jwtToken;
+    const user = await this.authService.createOrGetUser(jwtToken.user);
+    return {
+      accessToken: jwtToken.accessToken,
+      refreshToken: jwtToken.refreshToken,
+    };
   }
 }

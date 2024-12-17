@@ -60,3 +60,15 @@ model user_answers {
 
   @@index([example_sentence_id], map: "example_sentence_id")
 }
+
+model user {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  profileImage  String?
+  createdAt     DateTime  @default(now())
+  lastLoginAt   DateTime  @updatedAt
+  isActive      Boolean   @default(true)
+
+  @@map("users") // 테이블 이름을 'users'로 지정
+}
