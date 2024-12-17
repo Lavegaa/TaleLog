@@ -5,6 +5,7 @@ import { GetStoriesQueryDto } from '../dtos/story-query.dto';
 import GetStoriesByDifficultyLevelUc from '../usecases/story-list';
 import GetStoryByIdUc from '../usecases/story-by-id';
 import { JwtAuthGuard } from '@infra/services/jwt/guards/jwt-auth.guard';
+import { CurrentUser } from '@infra/services/jwt/decorators/user.decorator';
 
 @Controller('v1/stories')
 @ApiTags('Stories')
@@ -21,7 +22,7 @@ export default class StoryController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getStoryById(@Param('id') id: string): Promise<StoryDetailDto> {
+  async getStoryById(@Param('id') id: string, @CurrentUser() user): Promise<StoryDetailDto> {
     return await this.getStoryByIdUc.execute(Number(id));
   }
 }
