@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PostAnswerDto, StoryDetailDto, StoryDto, UserAnswerDto } from '../dtos/story.dto';
+import { PostAnswerDto, StoryDetailDto, StoryDto, UserAnswerDto, UserAnswerResponseDto } from '../dtos/story.dto';
 import { GetStoriesQueryDto } from '../dtos/story-query.dto';
 import StoryListUc from '../usecases/story-list';
 import StoryByIdUc from '../usecases/story-by-id';
@@ -8,6 +8,7 @@ import { JwtAuthGuard } from '@infra/services/jwt/guards/jwt-auth.guard';
 import { CurrentUser } from '@infra/services/jwt/decorators/user.decorator';
 import StoryCommandUc from '../usecases/story-command';
 import SimpleResponseDto from 'src/domain/common/dtos/SimpleResponseDto';
+import AnswerByStoryIdUc from '../usecases/answer-by-story-id';
 
 @Controller('v1/stories')
 @ApiTags('Stories')
@@ -16,6 +17,7 @@ export default class StoryController {
     private readonly storyListUc: StoryListUc,
     private readonly storyByIdUc: StoryByIdUc,
     private readonly storyCommandUc: StoryCommandUc,
+    private readonly answerByStoryIdUc: AnswerByStoryIdUc,
   ) {}
 
   @Get()
@@ -36,5 +38,12 @@ export default class StoryController {
     const userId = user.sub;
     await this.storyCommandUc.execute({ ...story, user_id: userId });
     return new SimpleResponseDto();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/answer/:storyId')
+  async getAnswerByStoryId(@Param('storyId', ParseIntPipe) storyId: number, @CurrentUser() user): Promise<UserAnswerResponseDto[]> {
+    const userId = user.sub;
+    return await this.answerByStoryIdUc.execute(userId, storyId);
   }
 }

@@ -43,4 +43,13 @@ export default class StoryRepository {
       }))
     });
   }
+
+  async getUserAnswers(userId: string, storyId: number) {
+    return await this.prisma.user_answers.findMany({
+      where: {
+        user_id: userId,
+        story_id: storyId,
+      },
+    });
+  }
 }

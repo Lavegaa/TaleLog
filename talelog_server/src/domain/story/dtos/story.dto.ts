@@ -41,6 +41,16 @@ export class UserAnswerDto extends PostAnswerDto {
   user_id: string;
 }
 
+export class UserAnswerResponseDto {
+  id: number;
+  created_at: Date | null;
+  story_id: number;
+  user_id: string;
+  example_sentence_id: number;
+  answer_ko: string | null;
+  answer_en: string | null;
+}
+
 // 스토리 생성을 위한 DTO
 export class CreateStoryDto {
   difficulty_id: number;

@@ -7,12 +7,14 @@ import GetStoryByIdUc from './usecases/story-by-id';
 import { JwtModule } from '@infra/services/jwt/jwt.module';
 import { StoryService } from './services/story.service';
 import StoryCommandUc from './usecases/story-command';
+import AnswerByStoryIdUc from './usecases/answer-by-story-id';
 
 const providers = [
   // uc
   GetStoriesByDifficultyLevelUc,
   GetStoryByIdUc,
   StoryCommandUc,
+  AnswerByStoryIdUc,
   // repository
   StoryRepository,
   // service
