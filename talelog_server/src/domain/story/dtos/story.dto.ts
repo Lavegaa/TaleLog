@@ -28,13 +28,17 @@ export class DifficultyLevelDto {
   level: string;
 }
 
-export class UserAnswerDto {
-  id: number;
-  user_id: number;
-  example_sentence_id: number;
-  answer: string;
-  is_correct: boolean;
-  created_at: Date;
+export class PostAnswerDto {
+  story_id: number;
+  answers: {
+    example_sentence_id: number;
+    answer_ko: string | null;
+    answer_en: string | null;
+  }[];
+}
+
+export class UserAnswerDto extends PostAnswerDto {
+  user_id: string;
 }
 
 // 스토리 생성을 위한 DTO

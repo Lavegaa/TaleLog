@@ -5,13 +5,18 @@ import StoryController from './controllers/story.controller';
 import StoryRepository from './repositories/story.repository';
 import GetStoryByIdUc from './usecases/story-by-id';
 import { JwtModule } from '@infra/services/jwt/jwt.module';
+import { StoryService } from './services/story.service';
+import StoryCommandUc from './usecases/story-command';
 
 const providers = [
   // uc
   GetStoriesByDifficultyLevelUc,
   GetStoryByIdUc,
+  StoryCommandUc,
   // repository
   StoryRepository,
+  // service
+  StoryService,
 ];
 
 @Module({

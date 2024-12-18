@@ -44,6 +44,7 @@ model stories {
   created_at        DateTime?           @default(now()) @db.Timestamp(0)
   updated_at        DateTime?           @default(now()) @db.Timestamp(0)
   example_sentences example_sentences[]
+  user_answers      user_answers[]
   difficulty_levels difficulty_levels?  @relation(fields: [difficulty_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "stories_ibfk_1")
 
   @@index([difficulty_id], map: "difficulty_id")
@@ -51,14 +52,17 @@ model stories {
 
 model user_answers {
   id                  Int                @id @default(autoincrement())
-  user_id             Int?
-  example_sentence_id Int?
-  answer              String?            @db.Text
-  is_correct          Boolean?
+  user_id             String
+  story_id            Int                // 추가: 스토리 ID
+  example_sentence_id Int
+  answer_ko          String?            @db.Text  // 수정: 한국어 답변
+  answer_en          String?            @db.Text  // 수정: 영어 답변
   created_at          DateTime?          @default(now()) @db.Timestamp(0)
-  example_sentences   example_sentences? @relation(fields: [example_sentence_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_answers_ibfk_1")
+  example_sentences   example_sentences? @relation(fields: [example_sentence_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  stories            stories?           @relation(fields: [story_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([example_sentence_id], map: "example_sentence_id")
+  @@index([example_sentence_id])
+  @@index([story_id])
 }
 
 model user {

@@ -3,7 +3,7 @@ import { DifficultyLevel } from '../dtos/story-query.dto';
 import StoryRepository from '../repositories/story.repository';
 
 @Injectable()
-export default class GetStoriesByDifficultyLevelUc {
+export default class StoryListUc {
   constructor(private readonly storyRepository: StoryRepository) {}
 
   async execute(difficulty: DifficultyLevel) {
